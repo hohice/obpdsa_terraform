@@ -1,0 +1,189 @@
+## obcluster.conf
+##
+SINGLE_OCP_MODE=FALSE
+################################   根据环境必须修改 / MUST CHANGE ACCORDING ENVIRONMENT   ################################
+############  填写机器IP和root/admin密码 / Edit Machine IP and Password Of root/admin  ############
+ZONE1_RS_IP=RSIPZONE1
+ZONE2_RS_IP=RSIPZONE2
+ZONE3_RS_IP=RSIPZONE3
+OBSERVER01_ROOTPASS='ROOTPASSWORD'
+OBSERVER02_ROOTPASS='ROOTPASSWORD'
+OBSERVER03_ROOTPASS='ROOTPASSWORD'
+OBSERVER01_ADMINPASS='ADMINPASSWORD'
+OBSERVER02_ADMINPASS='ADMINPASSWORD'
+OBSERVER03_ADMINPASS='ADMINPASSWORD'
+SSH_PORT=22
+
+
+############  填写负载均衡配置 / Edit Configuration of Load Balance  ############
+# LB_MODE: dns/f5/none, default: dns for 3 ocp, none for 1 ocp
+LB_MODE=dns
+
+###### 选择dns模式，请填写DNS基本配置 / Edit Configuration of DNS When Using DNS LB ######
+DNS_ZONE_NAME=oceanbase.com
+OCP_DNS_VPORT=80
+OB_DNS_DOCKER_IMAGE_PACKAGE=ob_dns.tar.gz
+OB_DNS_IMAGE_REPO=reg.docker.alibaba-inc.com/antman/ob_dns
+OB_DNS_IMAGE_TAG=OBDNS_x86_20200929_1937
+
+###### 选择f5模式，请填写F5等外部负载均衡配置 / Edit Configuration of F5 When Using External LB ######
+OBPROXY_F5_VIP=xxx.xxx.xxx.xxx
+OBPROXY_F5_VPORT=3306
+OCP_F5_VIP=xxx.xxx.xxx.xxx
+OCP_F5_VPORT=80
+
+
+############  根据服务器CPU、内存设置容器资源编排 / Allocate Container Resources According To Server  ############
+OB_DOCKER_CPUS=32
+OB_DOCKER_MEMORY=128G
+OCP_DOCKER_CPUS=8
+OCP_DOCKER_MEMORY=16G
+OBPROXY_DOCKER_CPUS=4
+OBPROXY_DOCKER_MEMORY=6G
+
+
+############  填写OCP各组件容器的版本信息 / Edit Docker Image, Repo And Tag of OCP Components  ############
+# OB docker
+OB_DOCKER_IMAGE_PACKAGE=ob2276.tar.gz
+OB_IMAGE_REPO=reg.docker.alibaba-inc.com/antman/ob-docker
+OB_IMAGE_TAG=OB2276_x86_20210303
+# OCP docker
+OCP_DOCKER_IMAGE_PACKAGE=ocp251.tar.gz
+OCP_IMAGE_REPO=reg.docker.alibaba-inc.com/oceanbase/ocp-all-in-one
+OCP_IMAGE_TAG=2.5.1-1922379
+# OBPROXY docker
+OBPROXY_DOCKER_IMAGE_PACKAGE=obproxy183.tar.gz
+OBPROXY_IMAGE_REPO=reg.docker.alibaba-inc.com/antman/obproxy
+OBPROXY_IMAGE_TAG=OBP183_20201223
+
+
+############  如果准备部署OMS，请填写OMS基本配置 / Edit Configuration Of OMS When Deploying OMS  ############
+OMS_IP=xxx.xxx.xxx.xxx
+OMS_DOCKER_IMAGE_PACKAGE=oms.feature_2.1.1.202102030012.tar.gz
+OMS_IMAGE_REPO=acs-reg.alipay.com/oceanbase/oms-all-in-one
+OMS_IMAGE_TAG=feature_2.1.1
+
+
+############  如果准备部署ODC，请填写ODC基本配置 / Edit Configuration Of ODC When Deploying ODC  ############
+ODC_DOCKER_IMAGE_PACKAGE=odc233.tar.gz
+ODC_IMAGE_REPO=acs-reg.alipay.com/oceanbase/obodc
+ODC_IMAGE_TAG=2.3.3
+
+
+########################################################################################################################
+
+
+################################    ADVANCED SETTINGS / 基本不用修改   ################################
+############  OB、OBPROXY、OCP 高级配置，基本不用修改 / OB, OBPROXY, OCP ADVANCED SETTINGS  ############
+
+######  自动配置，无需修改 / AUTO-CONFIGURATION ######
+OBPROXY_VIP=xxx.xxx.xxx.xxx
+OBPROXY_VPORT=3306
+OCP_VIP=xxx.xxx.xxx.xxx
+OCP_VPORT=80
+######  自动配置，无需修改 / AUTO-CONFIGURATION ######
+
+OBSERVER01_HOSTNAME=OCP_META_SERVER_1
+OBSERVER02_HOSTNAME=OCP_META_SERVER_2
+OBSERVER03_HOSTNAME=OCP_META_SERVER_3
+ZONE1_NAME=META_OB_ZONE_1
+ZONE2_NAME=META_OB_ZONE_2
+ZONE3_NAME=META_OB_ZONE_3
+##there must be more than half zone within same region
+ZONE1_REGION=OCP_META_REGION
+ZONE2_REGION=OCP_META_REGION
+ZONE3_REGION=OCP_META_REGION
+MYSQL_PORT=2881
+RPC_PORT=2882
+
+OCP_VERSION=xxx
+
+# for observer docker
+###### TODO 是否去掉 ######
+PHYSICAL_DATA_DIR=/data/1
+PHYSICAL_LOG_DIR=/data/log1
+# for install observer rpm and start observer process
+obcluster_name=obcluster
+cluster_id=timestamp            # 默认为timestamp，会被install.sh替换为当前时间戳，否则使用设定值的数字
+DATAFILE_DISK_PERCENTAGE=90
+
+# for backup nfs info
+BACKUP_ENABLE=FALSE
+PHYSICAL_BACKUP_DIR=/obbackup
+
+# for ocp docker
+OCP_PORT=8080
+OCP_CONTAINER_NAME=ocp
+OCP_METADB_USERNAME=root@ocp_meta
+OCP_MONITORDB_USERNAME=root@ocp_monitor
+OCP_OBPROXYDB_USERNAME=root@obproxy
+OCP_METADB_DBNAME=ocp
+OCP_MONITOR_DBNAME=ocp_monitor
+IDC_ROOM=am171
+DEFAULT_REGION=HANGZHOU
+
+# for ob dns & nginx
+OCP_OBPROXY_DNS_NAME=ocp-obproxy
+OCP_DNS_NAME=ocp
+OB_DNS_CONTAINER_NAME=ob_dns
+DNS_MASTER_IP=$ZONE1_RS_IP
+DNS_SLAVE_IP=$ZONE2_RS_IP
+DNS_THIRD_IP=$ZONE3_RS_IP
+NGINX_MASTER_IP=$ZONE1_RS_IP
+NGINX_SLAVE_IP=$ZONE2_RS_IP
+NGINX_PORT=85
+
+# obproxy and paramters
+OBPROXY_PORT=2883
+OBPROXY_CONTAINER_NAME=obproxy
+OBPROXY_APP_NAME_ARG=AntObproxy
+OBPROXY_CONFIG_SERVER_URL="http://${OCP_VIP}:${OCP_VPORT}/services?Action=GetObProxyConfig&User_ID=admin&UID=alibaba"
+
+
+############  OMS 高级配置，基本不用修改 / OMS ADVANCED SETTINGS  ############
+OMS_PORT=8088
+OMS_METADB_USER=root
+OMS_METADB_TENANT=oms_tenant
+OMS_METADB_DBNAME=oms_meta
+OMS_CONTAINER_NAME=oms
+OMS_DOCKER_CPUS=24
+OMS_DOCKER_MEMORY=96G
+
+## oms 2.x 需要配置挂载目录及influxdb相关
+OMS_PHYSICAL_LOG_DIR=/data/oms/oms_logs
+OMS_PHYSICAL_RUN_DIR=/data/oms/oms_run
+OMS_PYHSICAL_STORE_DIR=/data/oms/oms_store
+
+## 是否在OMS>=2.1时自动安装influxdb, 2.1之前版本会自动忽略
+OMS_INSTALL_INFLUXDB=TRUE
+OMS_INFLUXDB_PHISICAL_DIR=/data/oms/influxdb
+OMS_INFLUXDB_IMAGE_PACKAGE=influxdb_1.8.tar.gz
+OMS_INFLUXDB_IMAGE_REPO=influxdb
+OMS_INFLUXDB_IMAGE_TAG=1.8
+
+
+############  ODC 高级配置，基本不用修改 / ODC ADVANCED SETTINGS  ############
+ODC_PORT=8989
+ODC_METADB_USER=root
+ODC_METADB_TENANT=odc_meta
+ODC_METADB_DBNAME=odc
+ODC_CONTAINER_NAME=odc
+ODC_DOCKER_CPUS=4
+ODC_DOCKER_MEMORY=8G
+
+
+##################  OCP 多AZ 配置  ###################### 
+OCP_MAZ_ENABLED=FALSE                             # 如果开启多AZ，且没有全局vip时，上面配置的 OCP_VIP 和 OBPROXY_VIP 可改成主az的 vip 或者 任意ocp节点的ip
+OCP_MAZ_AZ_NAME_LIST=(az1 az1 az2)                # 对应 ocp1，ocp2，ocp3配置的 az_name
+OCP_MAZ_OCP_VIP_LIST=(az1_vip az1_vip az2_vip)    # 对应 ocp1，ocp2，ocp3配置的 site-url 的ip
+OCP_MAZ_OCP_VPORT_LIST=(80 80 80)				  # 对应 ocp1，ocp2，ocp3配置的 site-url 的port
+OCP_MAZ_METAPROXY_VIP_LIST=(az1_vip az1_vip az2_vip)  # 对应 ocp1, ocp2, ocp3使用的metadb 连接ip
+OCP_MAZ_METAPROXY_VPORT_LIST=(2883 2883 2883)         # 对应 ocp1, ocp2, ocp3使用的metadb 连接port
+
+################## OCP 多集群配置 #######################
+OCP_MC_ENABLED=FALSE              # 是否开启多集群，每次运行install.sh 只会装一个OCP集群， 且需要保证上面的cluster_id参数不相同，推荐每次安装时都修改为cluster_id=timestamp
+OCP_MC_ID=1                       # 需要手动保证主备 ocp 集群 id 不相等
+OCP_MC_NAME=oc1                   # OCP 集群名
+OCP_MC_ROLE=LEADER                # 可选值 LEADER/FOLLOWER
+
+
